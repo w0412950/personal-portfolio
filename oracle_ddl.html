@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!--
+          Luiza Nascimento's portfolio
+          Author: Luiza Nascimento W0412950
+          Date: April 4, 2018  
+      
+          Filename: index.html
+
+         -->
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <link href='port_reset.css' rel='stylesheet' />
+   <link href='port_styles.css' rel='stylesheet' />
+   <title>Luiza Nascimento</title>
+   
+</head>
+
+<body>
+  <header>
+	<h1>Luiza Nascimento</h1>
+    <nav class=horizontal>
+	  <ul>
+	    <li><a href="index.html">Home</a></li>	
+		<li><a href="goals.html">Goals</a></li>
+		<li><a href="skills.html">Skills</a></li>
+		<li><a href="resume.html">Resume</a></li>
+		<li><a href="worksamples.html">Worksamples</a></li>
+	    <li><a href="contact.html">Contact Me</a></li>
+	  </ul>
+	</nav>
+  </header>
+  
+  <main>
+    <article>
+	 <section class=sample>
+	  <h2>Oracle DDL</h2>
+	  <p>In the course Data Server Management, I created an Oracle 12c environment containerized. In this environment I then created a container database and all its objects - tablespaces, tables, indexes, roles and users.</p>
+	  <p>In this worksample, I will walk you through the steps I followed to create this objects. In my original work, I used the SPOOL command to create a log of all the steps I did and the outputs.</p> 
+	  <ol>
+	   <h3><li>Create pluggable database</li></h3>
+	    <p>The pluggable database can only be created by SYS. So while I was connected as SYS, I ran the following command:</p> 
+		
+		<mark><p>CREATE PLUGGABLE DATABASE pdb2 ADMIN USER pdb_adm IDENTIFIED BY password1</p></mark>
+        <mark><p>&emsp;FILE_NAME_CONVERT=('/u01/app/oracle/oradata/orclcont/pdbseed','/u01/app/oracle/oradata/orclcont/pdb2');</p></mark>
+		 
+		<p>After creating, I started the database:</p> 
+		<mark><p>ALTER SESSION SET container = pdb2;</p></mark>
+        <mark><p>startup</p></mark>
+	   
+	   <h3><li>Create tablespaces</li></h3>
+		<p>Tablespaces can create a physical and logical separation of the data. For this case, I created 4 tablespaces: 3 for data and 1 for indexes. Separating data from indexes can improve the performance of queries, if the tablespaces are in different disks. My environment has only one disk, so all the tablespaces are in the same mount point.</p> 
+		<p>To create the tablespace in the correct pluggable database, I first changed to pdb2:</p>
+		<p><mark>ALTER SESSION SET container = pdb2;</p></mark>
+	    <p>While connected as SYS, I ran the following command to create the tablespaces:</p> 
+		
+		 <mark><p>CREATE TABLESPACE EDW_DATA01</p></mark>
+		 <mark><p> &emsp;datafile '/u01/app/oracle/oradata/orclcont/pdb2/edw_data01.dbf'</p></mark> 
+		 <mark><p> &emsp;size 100m;</p></mark>
+         <mark><p>CREATE TABLESPACE EDW_DIM_DATA01</p></mark>
+		 <mark><p> &emsp;datafile '/u01/app/oracle/oradata/orclcont/pdb2/edw_dim_data01.dbf'</p></mark> 
+		 <mark><p> &emsp;size 100m;</p></mark>
+		 <mark><p>CREATE TABLESPACE EDW_OTHER_DATA01</p></mark>
+		 <mark><p> &emsp;datafile '/u01/app/oracle/oradata/orclcont/pdb2/edw_other_data01.dbf'</p></mark>
+		 <mark><p> &emsp;size 100m;</p></mark>
+		 <mark><p>CREATE TABLESPACE EDW_INDEX01</p></mark>
+		 <mark><p> &emsp;datafile '/u01/app/oracle/oradata/orclcont/pdb2/edw_index01.dbf'</p></mark> 
+		 <mark><p> &emsp;size 100m;</p></mark>
+		<p>Then I validated the tablespaces had been created.</p>
+		<mark><p>SELECT file_name, tablespace_name</p></mark>
+        <mark><p>FROM dba_data_files</p></mark>
+        <mark><p>WHERE tablespace_name IN ('EDW_DATA01', 'EDW_DIM_DATA01' , 'EDW_OTHER_DATA01', 'EDW_INDEX01');</p></mark>
+	   
+	   <h3><li>Create local role</li></h3>
+		<p>Before creating the user, I preferred creating a role to standarize the permissions granted to a user. This role would be used for users that own the objects.</p> 
+		<p>In Oracle 12c, the users and roles can be common to the whole instance or local to a pluggable database. In this worksample, I decided to create a local role, so I first have to confirm that my session is on pdb2:</p>
+		<mark><p>ALTER SESSION SET container = pdb2;</p></mark>
+	    <p>While connected as SYS, I ran the following command to create the role:</p> 
+		 <mark><p>CREATE ROLE DataDEV_Role;</p></mark>
+		 <mark><p>GRANT CREATE SESSION TO DataDev_Role;</p></mark> 
+		 <mark><p>GRANT RESOURCE TO DataDev_Role;</p></mark>
+         <mark><p>GRANT CREATE VIEW TO DataDev_Role;</p></mark>
+	   
+	   <h3><li>Create local user</li></h3>
+		<p>Now I can create the local user and grant the role I just created. To make the user local, the creation commands must be run from the local container.</p> 
+	    <p>While connected as SYS, I ran the following command to create the role:</p> 
+		 <mark><p>CREATE USER DataDEV</p></mark>
+		 <mark><p>&emsp;IDENTIFIED BY password1</p></mark> 
+		 <mark><p>&emsp;PASSWORD EXPIRE</p></mark>
+         <mark><p>&emsp;DEFAULT TABLESPACE EDW_OTHER_DATA01</p></mark>
+		 <mark><p>&emsp;CONTAINER=CURRENT;</p></mark>
+		 <mark><p>GRANT DataDev_Role TO DataDEV CONTAINER=CURRENT;</p></mark>
+		 <mark><p>GRANT CREATE MATERIALIZED VIEW TO DataDEV;</p></mark>
+	   
+	   <h3><li>Create tables</li></h3>
+		<p>The code to create table is straight-forward, but I was careful about some things. The schema will be the user that creates the table. If the tablespace is not defined, the table will be created in the owner's default tablespace. Constraints should be created according to logical design.</p> 
+	    <p>I connected with the user DataDEV, because I wanted this user to be the owner and the schema for this set of tables.</p> 
+		 <mark><p>CREATE TABLE  WF_CURRENCIES</p></mark>
+		 <mark><p>&emsp;("CURRENCY_CODE" VARCHAR2(7),</p></mark> 
+		 <mark><p>&emsp;"CURRENCY_NAME" VARCHAR2(40) CONSTRAINT "WF_CURR_NN" NOT NULL ENABLE,</p></mark>
+         <mark><p>&emsp;"COMMENTS" VARCHAR2(150),</p></mark>
+		 <mark><p>&emsp;CONSTRAINT "WF_CURR_PK" PRIMARY KEY ("CURRENCY_CODE")</p></mark>
+		 <mark><p>&emsp;USING INDEX  ENABLE</p></mark>
+		 <mark><p>) TABLESPACE EDW_OTHER_DATA01</p></mark>
+		 <mark><p>STORAGE (INITIAL 1M);</p></mark>
+		<p>Above is the code to create one table here, but you can find the whole script to create tables, indexes and constraints in the SQL script orcl_pdb2_cr_tables.sql</p>
+	   
+	  </ol>
+	  
+	 </section>
+	</article>
+	
+	<aside>
+	</aside>
+  </main>
+  <footer>
+    @2018Copyright by Luiza Nascimento
+  </footer>
+</body>
+
+</html>

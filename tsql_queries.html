@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!--
+          Luiza Nascimento's portfolio
+          Author: Luiza Nascimento W0412950
+          Date: April 4, 2018  
+      
+          Filename: index.html
+
+         -->
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <link href='port_reset.css' rel='stylesheet' />
+   <link href='port_styles.css' rel='stylesheet' />
+   <title>Luiza Nascimento</title>
+   
+</head>
+
+<body>
+  <header>
+	<h1>Luiza Nascimento</h1>
+    <nav class=horizontal>
+	  <ul>
+	    <li><a href="index.html">Home</a></li>	
+		<li><a href="goals.html">Goals</a></li>
+		<li><a href="skills.html">Skills</a></li>
+		<li><a href="resume.html">Resume</a></li>
+		<li><a href="worksamples.html">Worksamples</a></li>
+	    <li><a href="contact.html">Contact Me</a></li>
+	  </ul>
+	</nav>
+  </header>
+  
+  <main>
+    <article>
+	 <section class=sample>
+	  <h2>SQL queries</h2>
+	  <p>During my first year in the program IT Database Administration, I had two SQL courses: Data Fundamentals and Transactional Database Programming, the former in the first semester and the latter in the second one. In the first course, I learned the basic concepts of relational database, how to read an ERD and some basic manipulation commands. In the second one, I had more exposure to big datasets and developed my skills with data manipulation, data formatting and data moving. I also created views, subqueries and stored procedures. </p>
+	  <p>In this worksample, I can show my improvement in this subject, comparing two queries: one from the first course and the other from the second.</p> 
+	  <figure>
+	   <img  src="images/query1.jpg" alt="SQL Query" />
+	   <figcaption>First query</figcaption>
+	  </figure>
+	  <p>The first sample is a query to join three tables - Department, Employee and Reservation. The result is the total mileage of the cars rented by all employees of each department per month. To create this query, I used my knowledge about relationships to join the tables and get the expected result. I also used aggregation to sum all the values for the same department in the same month.</p>
+	  <figure>
+	   <img  src="images/query1r.jpg" alt="SQL Query result" />
+	   <figcaption>First query - dataset result</figcaption>
+	  </figure>
+	  <p>After doing the second course, I could do some improvements in this first query, like using aliases or subqueries to simplify the code.</p>
+	  
+	  <p>The second query is more complex. I first created a view joining the tables that I wanted to use and selected the most important fields. Then I created a stored procedure that can take one or two parameters as input and return different datasets accordingly.</p>
+	  <figure>
+	   <img  src="images/query2-view.jpg" alt="SQL Query result" />
+	   <figcaption>Second query - T-SQL View</figcaption>
+	  </figure>
+	  <figure>
+	   <img  src="images/query2-proc.jpg" alt="SQL Query result" />
+	   <figcaption>Second query - T-SQL Stored Procedure</figcaption>
+	  </figure>
+	  <p>In the second sample, I can demonstrate my ability to select data from multiple tables and format it to nice report, easy to read.</p>
+	  <p></p>
+	  <figure>
+	   <img  src="images/query2r.jpg" alt="SQL Query result" />
+	   <figcaption>Second query - Result</figcaption>
+	  </figure>
+	 </section>
+	</article>
+	
+	<aside>
+	</aside>
+  </main>
+  <footer>
+    @2018Copyright by Luiza Nascimento
+  </footer>
+</body>
+
+</html>

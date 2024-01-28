@@ -1,0 +1,30 @@
+@charset "utf-8";
+
+/*
+		Luiza Nascimento's portfolio
+          Author: Luiza Nascimento W0412950
+          Date: April 4, 2018  
+      
+          Filename: index.html
+
+*/
+
+/* Reset StyleSheet */
+a, address, article, aside, blockquote, body, cite,
+div, dl, dt, dd, em, figcaption, figure, footer,
+h1, h2, h3, h4, h5, h6, header, html, img,
+li, main, nav, ol, p, section, span, ul, mark {
+background: transparent;
+font-size: 100%;
+margin: 0;
+padding: 0;
+vertical-align: baseline;
+}
+ul {
+list-style: none;
+list-style-image: none;
+}
+
+a {
+text-decoration: none;
+}
